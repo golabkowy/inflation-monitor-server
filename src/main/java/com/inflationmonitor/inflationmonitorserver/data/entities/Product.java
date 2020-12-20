@@ -2,18 +2,18 @@ package com.inflationmonitor.inflationmonitorserver.data.entities;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
-//@Table(name="product")
+@Table(name = "product")
 public class Product {
-    public Product() { }
 
-    public Product( String name) {
+    public Product() {
+    }
+
+    public Product(String name) {
         this.name = name;
     }
 
@@ -21,5 +21,12 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "product_name", nullable = false)
     private String name;
+
+    @Column(name = "price")
+    private String price;
+
+    @Column(name = "date")
+    private Date date;
 }
