@@ -1,21 +1,23 @@
 package com.inflationmonitor.inflationmonitorserver.restapi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inflationmonitor.inflationmonitorserver.data.entities.Product;
+import com.inflationmonitor.inflationmonitorserver.data.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/products")
 public class ProductsController {
 
     @Autowired
-    private OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
+    private ProductRepository productRepository;
+//    PageableHandlerMethodArgumentResolver
+//    PageRequest ok to ma szanse rozwiazywac problem, ma w parametrze page, size, sort
 
     @GetMapping(value = {"/test-not-restricted", "/test-not-restricted/{id}"})
     private String testNotRestrictedAccess(@PathVariable(name = "id", required = false) String id,
@@ -24,18 +26,18 @@ public class ProductsController {
         return "Response for not restricted access GET Request endpoint " + testParam1 + " " + testParam2 + " ID:" + id;
     }
 
-    @GetMapping(value = {"/test-restricted"})
-    private String testRestrictedAccess() {
-        return "Response for not restricted access GET Request endpoint";
+    @GetMapping(value = {"/products"})
+    private ResponseEntity getAllProducts() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+//        String jsonStringShort = objectMapper.writeValueAsString(new ResponseShort("OK"));
+//        String jsonStringFull = objectMapper.writeValueAsString(new ResponseFull("OK"));
+//        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonStringFull);
+        return ResponseEntity.ok().body(productRepository.findAllCustom());
     }
 
-    @GetMapping("/test-oAuth2-token")
-    public void testOAuth2Credentials(OAuth2AuthenticationToken token) {
-        OAuth2AuthorizedClient client = oAuth2AuthorizedClientService.loadAuthorizedClient(token.getAuthorizedClientRegistrationId(), token.getName());
-    }
-
-    @GetMapping("/test-principal")
-    public String testPrincipal(@AuthenticationPrincipal OAuth2User user) {
-        return user.getAttributes().toString();
+    @GetMapping(value = "/products-pageable")
+//    private ResponseEntity<Page<Product>> readProductsPagable(@RequestParam("customParam") String param, Pageable pageable) {
+    private ResponseEntity<Page<Product>> readProductsPagable(Pageable pageable) {
+        return ResponseEntity.ok().body(productRepository.findAll(pageable));
     }
 }
