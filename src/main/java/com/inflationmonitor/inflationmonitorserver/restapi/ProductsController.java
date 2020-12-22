@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inflationmonitor.inflationmonitorserver.data.entities.Product;
 import com.inflationmonitor.inflationmonitorserver.data.repositories.ProductRepository;
+import com.inflationmonitor.inflationmonitorserver.response.PaginatedProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,9 +37,16 @@ public class ProductsController {
         return ResponseEntity.ok().body(productRepository.findAllCustom());
     }
 
-    @GetMapping(value = "/products-pageable")
+    @GetMapping(value = "/pageable")
 //    private ResponseEntity<Page<Product>> readProductsPagable(@RequestParam("customParam") String param, Pageable pageable) {
     private ResponseEntity<Page<Product>> readProductsPagable(Pageable pageable) {
         return ResponseEntity.ok().body(productRepository.findAll(pageable));
+    }
+
+    @GetMapping(value = "/custom-response", produces = MediaType.APPLICATION_JSON_VALUE)
+    private ResponseEntity<PaginatedProductResponse> readProductsPagableCustom(Pageable pageable) {
+        double[] testArr = {2.1, 2.2, 2.3, 2.3, 2.5};
+        return ResponseEntity
+                .ok(new PaginatedProductResponse(productRepository.findAll(pageable).toList(), 5, "testCustom", testArr));
     }
 }
