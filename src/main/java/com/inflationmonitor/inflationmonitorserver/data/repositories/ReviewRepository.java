@@ -10,4 +10,7 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Override
     List<Review> findAll();
+
+    @Override
+    <S extends Review> S saveAndFlush(S entity);
 }
