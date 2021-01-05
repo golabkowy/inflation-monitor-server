@@ -3,10 +3,12 @@ package com.inflationmonitor.inflationmonitorserver.restapi;
 import com.inflationmonitor.inflationmonitorserver.response.SimpleResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/auth")
@@ -25,5 +27,11 @@ public class Auth {
                 .ok()
                 .header("Set-Cookie", "testkey=testvalue")
                 .body(new SimpleResponse("test simple response"));
+    }
+
+    // get all oauth2 info
+    @GetMapping("/userInfo")
+    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
+        return principal.getAttributes();
     }
 }
