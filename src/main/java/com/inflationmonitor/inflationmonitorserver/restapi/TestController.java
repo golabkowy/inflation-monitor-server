@@ -3,6 +3,7 @@ package com.inflationmonitor.inflationmonitorserver.restapi;
 import com.inflationmonitor.inflationmonitorserver.data.repositories.ProductRepository;
 import com.inflationmonitor.inflationmonitorserver.response.TestPOJO;
 import com.inflationmonitor.inflationmonitorserver.response.TestResponse;
+import com.inflationmonitor.inflationmonitorserver.services.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,6 +27,9 @@ public class TestController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private MailService mailService;
 
     @GetMapping(value = "/")
     private String testGetBasicPath() {
@@ -68,6 +72,12 @@ public class TestController {
     @RequestMapping("/test-secure-denyAll")
     public String testGetSecurityDenyAll() {
         return "You have na access to test-source method";
+    }
+
+    @RequestMapping("/test-send-email")
+    public String testGetSendMail() {
+        mailService.sendMail("to", "topic", "message");
+        return "send mail";
     }
 
     @RequestMapping("/test-secure-form")
