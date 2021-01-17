@@ -1,7 +1,5 @@
 package com.inflationmonitor.inflationmonitorserver.restapi;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inflationmonitor.inflationmonitorserver.data.entities.Product;
 import com.inflationmonitor.inflationmonitorserver.data.repositories.ProductRepository;
 import com.inflationmonitor.inflationmonitorserver.response.PaginatedProductResponse;
@@ -29,16 +27,11 @@ public class ProductsController {
     }
 
     @GetMapping(value = {"/products"})
-    private ResponseEntity getAllProducts() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-//        String jsonStringShort = objectMapper.writeValueAsString(new ResponseShort("OK"));
-//        String jsonStringFull = objectMapper.writeValueAsString(new ResponseFull("OK"));
-//        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonStringFull);
+    private ResponseEntity getAllProducts() {
         return ResponseEntity.ok().body(productRepository.findAllCustom());
     }
 
     @GetMapping(value = "/pageable")
-//    private ResponseEntity<Page<Product>> readProductsPagable(@RequestParam("customParam") String param, Pageable pageable) {
     private ResponseEntity<Page<Product>> readProductsPagable(Pageable pageable) {
         return ResponseEntity.ok().body(productRepository.findAll(pageable));
     }
@@ -48,5 +41,10 @@ public class ProductsController {
         double[] testArr = {2.1, 2.2, 2.3, 2.3, 2.5};
         return ResponseEntity
                 .ok(new PaginatedProductResponse(productRepository.findAll(pageable).toList(), 5, "testCustom", testArr));
+    }
+
+    @PostMapping(value = "/add-new-product-type")
+    private void addNewProductType(@RequestBody Product product) {
+        productRepository.save(product);
     }
 }
