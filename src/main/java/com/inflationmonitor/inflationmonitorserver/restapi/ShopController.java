@@ -1,7 +1,9 @@
 package com.inflationmonitor.inflationmonitorserver.restapi;
 
 import com.inflationmonitor.inflationmonitorserver.data.entities.Shop;
+import com.inflationmonitor.inflationmonitorserver.data.entities.ShopType;
 import com.inflationmonitor.inflationmonitorserver.data.repositories.ShopRepository;
+import com.inflationmonitor.inflationmonitorserver.data.repositories.ShopTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,15 +15,17 @@ import java.util.List;
 @RequestMapping("/shop")
 public class ShopController {
 
-    public ShopController(ShopRepository shopRepository) {
-        this.shopRepository = shopRepository;
-    }
-
     public ShopRepository shopRepository;
+    public ShopTypeRepository shopTypeRepository;
 
     @Autowired
     public void setShopRepository(ShopRepository shopRepository) {
         this.shopRepository = shopRepository;
+    }
+
+    @Autowired
+    public void setShopTypeRepository(ShopTypeRepository shopTypeRepository) {
+        this.shopTypeRepository = shopTypeRepository;
     }
 
     @GetMapping(value = "/")
@@ -32,5 +36,10 @@ public class ShopController {
     @GetMapping(value = "/list")
     public List<Shop> listAllShops() {
         return shopRepository.findAll();
+    }
+
+    @GetMapping(value = "/list-shop-types", produces = "application/json")
+    public List<ShopType> listAllShopTypes() {
+        return shopTypeRepository.findAll();
     }
 }

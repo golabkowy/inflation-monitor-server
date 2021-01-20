@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ShopRepository extends CrudRepository<Shop, Long> {
@@ -13,7 +14,4 @@ public interface ShopRepository extends CrudRepository<Shop, Long> {
 
     @Override
     List<Shop> findAll();
-
-    @Override
-    Iterable<Shop> findAllById(Iterable<Long> longs);
 }
