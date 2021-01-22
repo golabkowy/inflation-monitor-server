@@ -5,9 +5,7 @@ import com.inflationmonitor.inflationmonitorserver.data.entities.ShopType;
 import com.inflationmonitor.inflationmonitorserver.data.repositories.ShopRepository;
 import com.inflationmonitor.inflationmonitorserver.data.repositories.ShopTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,5 +39,11 @@ public class ShopController {
     @GetMapping(value = "/list-shop-types", produces = "application/json")
     public List<ShopType> listAllShopTypes() {
         return shopTypeRepository.findAll();
+    }
+
+    @PostMapping(value = "/add-shop-type")
+    public void addShopType(@RequestBody ShopType shopType) {
+        System.out.println(shopType);
+
     }
 }
