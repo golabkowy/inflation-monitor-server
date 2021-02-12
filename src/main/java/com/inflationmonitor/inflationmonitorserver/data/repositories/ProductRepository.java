@@ -22,4 +22,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT * FROM Product", nativeQuery = true)
     Iterable<Product> findAllCustom();
+
+    Iterable<Product> findAllByNameStartsWith(String phrase);
 }

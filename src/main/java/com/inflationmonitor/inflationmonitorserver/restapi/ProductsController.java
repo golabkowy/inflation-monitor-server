@@ -42,6 +42,11 @@ public class ProductsController {
         return ResponseEntity.ok().body(productRepository.findAllCustom());
     }
 
+    @GetMapping(value = {"/products-by-phrase"})
+    private ResponseEntity<Iterable<Product>> getProductsByPhrase(@RequestParam(name = "phrase") String phrase) {
+        return ResponseEntity.ok().body(productRepository.findAllByNameStartsWith(phrase));
+    }
+
     @GetMapping(value = "/pageable")
     private ResponseEntity<Page<Product>> readProductsPagable(Pageable pageable) {
         return ResponseEntity.ok().body(productRepository.findAll(pageable));

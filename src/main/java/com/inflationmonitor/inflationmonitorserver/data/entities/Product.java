@@ -17,7 +17,6 @@ public class Product {
         this.shopID = shopID;
         this.id = id;
         this.name = name;
-        this.category = category;
         this.price = price;
         this.date = date;
     }
@@ -33,12 +32,13 @@ public class Product {
     @Column(name = "product_name", nullable = false)
     private String name;
 
-    @Column(name = "category")
-    private String category;
-
     @Column(name = "price")
     private Double price;
 
     @Column(name = "date")
     private Date date;
+
+    @OneToOne(targetEntity = ProductType.class)
+    @JoinColumn(name = "product_type_id", referencedColumnName = "id")
+    private ProductType productType;
 }
